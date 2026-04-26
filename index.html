@@ -3,91 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sanjanaa Suresh | DNA Universe</title>
+    <title>Sanjanaa Suresh | Digital Twin Simulation</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Three.js and GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
-    <!-- Post-processing -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
 </head>
 <body>
-    <div id="experience-overlay" class="hologram-panel hidden">
-        <button class="close-btn" onclick="closeOverlay('experience-overlay')">X</button>
-        <h2 class="section-title">LAB_STATIONS (EXPERIENCE)</h2>
-        <div class="station-grid">
-            <div class="station-card">
-                <h3>Amazon Music</h3>
-                <p class="role">Application Engineer 3 [L4]</p>
-                <p class="date">Feb 2025 – Present</p>
-                <ul class="task-list">
-                    <li>Owned production reliability for distributed backend systems.</li>
-                    <li>Designed automated validation frameworks.</li>
-                    <li>Built GenAI-powered validation tooling.</li>
-                </ul>
+    <!-- Sector 1: Amazon Music Lab -->
+    <div id="amazon-overlay" class="hologram-panel hidden">
+        <button class="close-btn" onclick="closeOverlay('amazon-overlay')">X_CLOSE</button>
+        <h2 class="section-title">SECTOR_01 // AMAZON_MUSIC_L4</h2>
+        <div class="content-body">
+            <h3>APPLICATION ENGINEER 3</h3>
+            <p class="date">FEB 2025 – PRESENT // BENGALURU</p>
+            <ul class="task-list">
+                <li>Owned production reliability for distributed backend systems, resolving Sev1/Sev2 incidents through root cause analysis.</li>
+                <li>Designed automated validation frameworks, reducing manual regression effort by ~3+ hours per cycle.</li>
+                <li>Built GenAI-powered validation tooling leveraging LLM-based systems and AWS infrastructure for QA automation.</li>
+                <li>Enhanced observability systems (metrics, logging, traffic analysis) for high-scale environments.</li>
+                <li>Resolved critical configuration drift issues across multi-service architectures.</li>
+                <li>Worked on large-scale ETL pipelines and data workflows, optimizing query performance.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Sector 2: IoT & Systems Wing -->
+    <div id="aiotel-overlay" class="hologram-panel hidden">
+        <button class="close-btn" onclick="closeOverlay('aiotel-overlay')">X_CLOSE</button>
+        <h2 class="section-title">SECTOR_02 // AIOTEL_SYSTEMS</h2>
+        <div class="content-body">
+            <h3>SOFTWARE ENGINEER (BACKEND & SYSTEMS)</h3>
+            <p class="date">MAY 2023 – JAN 2025</p>
+            <div class="sub-sector">
+                <h4>SCALABLE_IOT_PLATFORM</h4>
+                <p>Designed end-to-end analytics platform using Spring Boot microservices and Kafka/Spark pipelines.</p>
             </div>
-            <div class="station-card">
-                <h3>AIOTEL Pvt Ltd</h3>
-                <p class="role">Software Engineer</p>
-                <p class="date">May 2023 – Jan 2025</p>
-                <ul class="task-list">
-                    <li>Built end-to-end IoT and analytics platform.</li>
-                    <li>Architected distributed data pipelines.</li>
-                    <li>Developed high-performance RESTful APIs.</li>
-                </ul>
+            <div class="sub-sector">
+                <h4>DATA_OPTIMIZATION</h4>
+                <p>Engineered custom DSL parser for SQL generation and built connectors for heterogeneous data sources.</p>
+            </div>
+            <div class="sub-sector">
+                <h4>SECURITY_&_AUTH</h4>
+                <p>Implemented multi-tenant architecture with RBAC using Spring Security.</p>
             </div>
         </div>
     </div>
 
+    <!-- Sector 3: Autonomous Robotics Bay -->
+    <div id="robotics-overlay" class="hologram-panel hidden">
+        <button class="close-btn" onclick="closeOverlay('robotics-overlay')">X_CLOSE</button>
+        <h2 class="section-title">SECTOR_03 // AUTONOMOUS_CONTROL</h2>
+        <div class="content-body">
+            <h3>BULLWORK MOBILITY // CONTROL SYSTEMS</h3>
+            <ul class="task-list">
+                <li>Implemented control systems for autonomous agricultural vehicles using Embedded C and Ladder Logic.</li>
+                <li>Developed and tuned PID control loops for vehicle subsystem stability.</li>
+                <li>Integrated CAN/I2C protocols for distributed hardware interaction.</li>
+                <li>Worked on AI-based video analytics for real-time streaming data.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Sector 4: Genetic Toolkit (Skills) -->
     <div id="skills-overlay" class="hologram-panel hidden">
-        <button class="close-btn" onclick="closeOverlay('skills-overlay')">X</button>
-        <h2 class="section-title">GENETIC_TOOLKIT</h2>
+        <button class="close-btn" onclick="closeOverlay('skills-overlay')">X_CLOSE</button>
+        <h2 class="section-title">SYSTEM_SPECS // GENETIC_TOOLKIT</h2>
         <div class="toolkit-container">
             <div class="skill-category">
-                <h3>BACKEND_BASE_PAIRS</h3>
-                <div class="skill-tags">
-                    <span>Java</span> <span>Spring Boot</span> <span>Python</span> <span>C++</span>
-                </div>
+                <h3>BACKEND_ENG</h3>
+                <div class="skill-tags"><span>Distributed Systems</span><span>Microservices</span><span>RESTful APIs</span><span>RBAC</span></div>
             </div>
             <div class="skill-category">
-                <h3>SYSTEM_ARCHITECTURE</h3>
-                <div class="skill-tags">
-                    <span>Kafka</span> <span>Microservices</span> <span>AWS</span>
-                </div>
+                <h3>LANGUAGES</h3>
+                <div class="skill-tags"><span>Java (Spring Boot)</span><span>Python</span><span>C++</span><span>Embedded C</span></div>
             </div>
-        </div>
-    </div>
-
-    <div id="projects-overlay" class="hologram-panel hidden">
-        <button class="close-btn" onclick="closeOverlay('projects-overlay')">X</button>
-        <h2 class="section-title">SYNTHESIZED_PROJECTS</h2>
-        <div class="project-carousel">
-            <div class="project-item">
-                <h3>Fault Diagnosis (AI)</h3>
-                <p>AI for floating wind turbine generators.</p>
+            <div class="skill-category">
+                <h3>DATA_&_STREAMING</h3>
+                <div class="skill-tags"><span>Kafka</span><span>RabbitMQ</span><span>PostgreSQL</span><span>ClickHouse</span><span>Spark</span></div>
             </div>
-            <div class="project-item">
-                <h3>Smart Mirror</h3>
-                <p>Raspberry Pi & IoT integration.</p>
-            </div>
-            <div class="project-item">
-                <h3>Mycelium Simulation</h3>
-                <p>Agent-based fungal network model.</p>
+            <div class="skill-category">
+                <h3>AI_&_CLOUD</h3>
+                <div class="skill-tags"><span>GenAI</span><span>TensorFlow</span><span>AWS</span><span>Docker/K8s</span></div>
             </div>
         </div>
     </div>
 
     <div id="intro-screen">
         <div class="intro-content">
-            <h1 class="glitch" data-text="DNA_UNIVERSE">DNA_UNIVERSE</h1>
-            <p>Initializing Neural Link to Sanjanaa Suresh's Research Vault...</p>
-            <button id="enter-btn">ENTER_UNIVERSE</button>
+            <h1 class="glitch" data-text="TWIN_SIMULATION">TWIN_SIMULATION</h1>
+            <p>ACCESSING_SANJANAA_SURESH_CORE_DATA...</p>
+            <button id="enter-btn">INITIATE_LINK</button>
         </div>
     </div>
 
@@ -96,19 +106,20 @@
     <header class="ui-element hidden">
         <div class="logo">
             <h1>SANJANAA_SURESH</h1>
-            <p class="tagline">SOFTWARE ENGINEER | BIOTECH ENTHUSIAST</p>
+            <p>COORD: 12.9716° N, 77.5946° E // BENGALURU</p>
         </div>
         <nav>
             <ul>
-                <li onclick="focusNode('experience')">STATIONS</li>
-                <li onclick="focusNode('skills')">TOOLKIT</li>
-                <li onclick="focusNode('projects')">SYNTHESIS</li>
+                <li onclick="focusSector('amazon')">AMAZON_LAB</li>
+                <li onclick="focusSector('aiotel')">IOT_WING</li>
+                <li onclick="focusSector('robotics')">ROBOTICS_BAY</li>
+                <li onclick="focusSector('skills')">SPECS</li>
             </ul>
         </nav>
     </header>
 
     <footer class="ui-element hidden">
-        <p>SYSTEM_OPERATIONAL // <a href="https://www.linkedin.com/in/sanjanaa-s-3ba20a178/" target="_blank">LINKEDIN</a></p>
+        <p>RELIABILITY_SCORE: 99.9% // <a href="mailto:sanjanaasuresh2000@gmail.com">CONTACT_NODE</a></p>
     </footer>
 
     <script src="script.js"></script>
