@@ -16,6 +16,7 @@ body, html {
     color: var(--text-color);
     font-family: 'JetBrains Mono', monospace;
     text-transform: uppercase;
+    font-size: clamp(12px, 1.2vw, 16px); /* Responsive base font size */
 }
 
 /* Digital Twin Diagnostic Overlay */
@@ -53,12 +54,12 @@ body::after {
     align-items: center;
     z-index: 1000;
     text-align: center;
-    transition: opacity 1.5s ease;
+    transition: opacity 1s ease;
 }
 
 .intro-content h1 {
     font-family: 'Orbitron', sans-serif;
-    font-size: 4rem;
+    font-size: clamp(2rem, 8vw, 5rem);
     color: var(--accent-color);
     text-shadow: var(--accent-glow);
     margin-bottom: 1rem;
@@ -70,7 +71,7 @@ body::after {
     color: var(--accent-color);
     padding: 1rem 2rem;
     font-family: 'Orbitron', sans-serif;
-    font-size: 1.2rem;
+    font-size: clamp(0.8rem, 2vw, 1.2rem);
     cursor: pointer;
     margin-top: 2rem;
     transition: all 0.3s;
@@ -92,10 +93,10 @@ body::after {
     width: 90vw;
     max-width: 1000px;
     height: auto;
-    max-height: 80vh;
+    max-height: 85vh;
     background: rgba(0, 10, 15, 0.95);
     border: 1px solid var(--accent-color);
-    padding: 2.5rem 1.5rem 1.5rem 1.5rem;
+    padding: clamp(1rem, 3vw, 2.5rem);
     z-index: 500;
     overflow-y: auto;
     backdrop-filter: blur(20px);
@@ -113,7 +114,7 @@ body::after {
 }
 
 .hologram-panel::before {
-    content: "SYSTEM_DIAGNOSTIC_v2.0";
+    content: "SYSTEM_DIAGNOSTIC_v3.0_CORRIDOR";
     position: absolute;
     top: 8px;
     left: 20px;
@@ -122,27 +123,123 @@ body::after {
     letter-spacing: 2px;
 }
 
-/* Content Layout Fixes */
-.station-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-    gap: 1.5rem; 
-    width: 100%;
+.hidden {
+    display: none !important;
 }
 
-.project-carousel {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-    width: 100%;
+.close-btn {
+    align-self: flex-end;
+    background: transparent;
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s;
 }
+
+.close-btn:hover {
+    background: var(--accent-color);
+    color: var(--bg-color);
+}
+
+/* UI Elements */
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    box-sizing: border-box;
+    pointer-events: none;
+}
+
+header * { pointer-events: auto; }
+
+.logo h1 {
+    font-size: clamp(0.8rem, 2vw, 1.2rem);
+    margin: 0;
+    color: var(--accent-color);
+}
+
+.logo p {
+    font-size: 0.6rem;
+    margin: 0;
+    opacity: 0.7;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: clamp(0.5rem, 2vw, 2rem);
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(0.5rem, 1.2vw, 0.7rem);
+    color: var(--accent-color);
+    cursor: pointer;
+    letter-spacing: 2px;
+    padding: 0.5rem;
+    border: 1px solid transparent;
+    transition: all 0.3s;
+}
+
+nav ul li:hover {
+    border: 1px solid var(--accent-color);
+    text-shadow: var(--accent-glow);
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 1rem;
+    text-align: center;
+    z-index: 100;
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+footer a { pointer-events: auto; color: var(--accent-color); text-decoration: none; }
+
+/* Content Styles */
+.section-title { 
+    color: var(--accent-color); 
+    margin-bottom: 1.5rem; 
+    font-size: clamp(1rem, 2.5vw, 1.5rem); 
+    border-left: 3px solid var(--accent-color); 
+    padding-left: 1rem; 
+}
+
+.content-body h3 { font-size: 1.1rem; margin-top: 0; color: #fff; }
+.date { font-size: 0.8rem; opacity: 0.6; margin-bottom: 1rem; }
+
+.task-list { padding-left: 1.2rem; margin-bottom: 1.5rem; }
+.task-list li { margin-bottom: 0.5rem; font-size: 0.9rem; }
+
+.sub-sector { margin-bottom: 1.5rem; border: 1px solid rgba(0, 255, 204, 0.2); padding: 1rem; }
+.sub-sector h4 { margin: 0 0 0.5rem 0; color: var(--accent-color); font-size: 0.9rem; }
+.sub-sector p { margin: 0; font-size: 0.85rem; opacity: 0.8; }
 
 .toolkit-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1.5rem;
-    width: 100%;
 }
+
+.skill-category h3 { font-size: 0.9rem; color: var(--accent-color); margin-bottom: 0.8rem; }
+.skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.skill-tags span { border: 1px solid var(--accent-color); padding: 0.2rem 0.5rem; font-size: 0.7rem; color: #fff; }
 
 /* Glitch Effect */
 .glitch {
@@ -160,7 +257,7 @@ body::after {
 @keyframes glitch-anim2 { 0% { clip: rect(65px, 9999px, 100px, 0); } 100% { clip: rect(10px, 9999px, 15px, 0); } }
 
 @media (max-width: 768px) {
-    .station-grid { grid-template-columns: 1fr; }
-    .intro-content h1 { font-size: 2rem; }
-    header { padding: 1rem; flex-direction: column; }
+    header { flex-direction: column; gap: 0.5rem; }
+    nav ul { gap: 0.5rem; }
+    .hologram-panel { padding: 1.5rem 1rem; }
 }

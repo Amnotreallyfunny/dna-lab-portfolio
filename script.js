@@ -3,10 +3,15 @@ let interactiveNodes = [];
 let isUniverseActive = false;
 let clock = new THREE.Clock();
 
+// Corridor Dimensions
+const corridorWidth = 40;
+const corridorHeight = 30;
+const corridorLength = 600;
+
 function init() {
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x00080a);
-    scene.fog = new THREE.Fog(0x00080a, 50, 500);
+    scene.fog = new THREE.Fog(0x00080a, 50, 400);
 
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
     
@@ -19,7 +24,7 @@ function init() {
     const renderScene = new THREE.RenderPass(scene, camera);
     const bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.0, 0.4, 0.85);
     bloomPass.threshold = 0.1;
-    bloomPass.strength = 1.2;
+    bloomPass.strength = 1.0;
     bloomPass.radius = 0.5;
 
     composer = new THREE.EffectComposer(renderer);
@@ -32,12 +37,13 @@ function init() {
     raycaster = new THREE.Raycaster();
     mouse = new THREE.Vector2();
 
-    createNetwork();
-    createCentralCore();
+    createHallway();
+    createDNALab();
     createSectors();
 
-    camera.position.set(0, 500, 500);
-    camera.lookAt(0, 0, 0);
+    // Initial camera position (looking down the hallway)
+    camera.position.set(0, 5, 250);
+    camera.lookAt(0, 5, -300);
 
     window.addEventListener('resize', onWindowResize);
     window.addEventListener('click', onClick);
@@ -46,77 +52,147 @@ function init() {
     animate();
 }
 
-function createNetwork() {
-    const size = 1000;
-    const grid = new THREE.GridHelper(size, 40, 0x00ffcc, 0x011a1a);
-    grid.position.y = -50;
+function createHallway() {
+    // Floor
+    const floorGeom = new THREE.PlaneGeometry(corridorWidth, corridorLength);
+    const floorMat = new THREE.MeshStandardMaterial({ 
+        color: 0x050a10, 
+        metalness: 0.9, 
+        roughness: 0.1 
+    });
+    const floor = new THREE.Mesh(floorGeom, floorMat);
+    floor.rotation.x = -Math.PI / 2;
+    floor.position.z = -corridorLength / 2 + 300;
+    scene.add(floor);
+
+    // Ceiling
+    const ceiling = floor.clone();
+    ceiling.position.y = corridorHeight;
+    ceiling.rotation.x = Math.PI / 2;
+    scene.add(ceiling);
+
+    // Walls
+    const wallGeom = new THREE.PlaneGeometry(corridorLength, corridorHeight);
+    const wallMat = new THREE.MeshStandardMaterial({ 
+        color: 0x020508, 
+        metalness: 0.8, 
+        roughness: 0.5,
+        wireframe: false
+    });
+
+    const leftWall = new THREE.Mesh(wallGeom, wallMat);
+    leftWall.position.x = -corridorWidth / 2;
+    leftWall.position.y = corridorHeight / 2;
+    leftWall.position.z = -corridorLength / 2 + 300;
+    leftWall.rotation.y = Math.PI / 2;
+    scene.add(leftWall);
+
+    const rightWall = leftWall.clone();
+    rightWall.position.x = corridorWidth / 2;
+    rightWall.rotation.y = -Math.PI / 2;
+    scene.add(rightWall);
+
+    // Lighting strips
+    const stripGeom = new THREE.BoxGeometry(0.5, 0.1, corridorLength);
+    const stripMat = new THREE.MeshBasicMaterial({ color: 0x00ffcc });
+    
+    const stripL = new THREE.Mesh(stripGeom, stripMat);
+    stripL.position.set(-corridorWidth/2 + 0.5, 0.05, -corridorLength/2 + 300);
+    scene.add(stripL);
+
+    const stripR = stripL.clone();
+    stripR.position.x = corridorWidth/2 - 0.5;
+    scene.add(stripR);
+
+    // Grid on floor
+    const grid = new THREE.GridHelper(corridorLength, 60, 0x00ffcc, 0x011a1a);
+    grid.rotation.x = Math.PI / 2; // Fixed rotation to align with floor
+    grid.position.set(0, 0.1, -corridorLength/2 + 300);
+    grid.rotation.y = Math.PI / 2;
     grid.material.opacity = 0.2;
     grid.material.transparent = true;
     scene.add(grid);
+
+    // Hallway Point Lights
+    for(let i = 0; i < 6; i++) {
+        const pLight = new THREE.PointLight(0x00ffcc, 0.5, 100);
+        pLight.position.set(0, corridorHeight - 2, 200 - i * 120);
+        scene.add(pLight);
+    }
+
+    scene.add(new THREE.AmbientLight(0x101010));
 }
 
-function createCentralCore() {
-    const segments = 150;
-    const radius = 10;
-    const height = 150;
-    const twist = Math.PI * 10;
+function createDNALab() {
+    const segments = 120;
+    const radius = 6;
+    const height = 80;
+    const twist = Math.PI * 6;
 
     for (let i = 0; i < segments; i++) {
         const ratio = i / segments;
         const angle = ratio * twist;
-        const y = ratio * height - height/2;
+        const y = ratio * height + 2;
 
         const x1 = Math.cos(angle) * radius;
         const z1 = Math.sin(angle) * radius;
         const x2 = Math.cos(angle + Math.PI) * radius;
         const z2 = Math.sin(angle + Math.PI) * radius;
 
-        const p1 = new THREE.Mesh(new THREE.SphereGeometry(0.5), new THREE.MeshBasicMaterial({ color: 0x00ffcc }));
+        const p1 = new THREE.Mesh(new THREE.SphereGeometry(0.3), new THREE.MeshBasicMaterial({ color: 0x00ffcc }));
         p1.position.set(x1, y, z1);
         dnaGroup.add(p1);
 
-        const p2 = new THREE.Mesh(new THREE.SphereGeometry(0.5), new THREE.MeshBasicMaterial({ color: 0x00ffff }));
+        const p2 = new THREE.Mesh(new THREE.SphereGeometry(0.3), new THREE.MeshBasicMaterial({ color: 0x00ffff }));
         p2.position.set(x2, y, z2);
         dnaGroup.add(p2);
 
         const lineGeom = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x1, y, z1), new THREE.Vector3(x2, y, z2)]);
         dnaGroup.add(new THREE.Line(lineGeom, new THREE.LineBasicMaterial({ color: 0x00ffcc, transparent: true, opacity: 0.1 })));
     }
+    dnaGroup.position.set(0, 0, -280);
 }
 
 function createSectors() {
-    // Sector Coordinates
     const sectors = [
-        { id: 'amazon', pos: [-150, 50, -150], color: 0xffaa00, label: 'AMAZON_LAB' },
-        { id: 'aiotel', pos: [150, 50, -150], color: 0x00ccff, label: 'IOT_WING' },
-        { id: 'robotics', pos: [0, 50, 200], color: 0xff0055, label: 'ROBOTICS_BAY' },
-        { id: 'skills', pos: [0, -20, 0], color: 0x00ffcc, label: 'CORE_SPECS' }
+        { id: 'amazon', side: 'left', z: 150, color: 0xffaa00, label: 'AMAZON_LAB' },
+        { id: 'aiotel', side: 'right', z: 50, color: 0x00ccff, label: 'IOT_WING' },
+        { id: 'robotics', side: 'left', z: -50, color: 0xff0055, label: 'ROBOTICS_BAY' },
+        { id: 'skills', side: 'right', z: -150, color: 0x00ffcc, label: 'CORE_SPECS' }
     ];
 
     sectors.forEach(s => {
+        const x = s.side === 'left' ? -corridorWidth/2 : corridorWidth/2;
         const group = new THREE.Group();
         
-        // Sector Room (Wireframe Cube)
-        const roomGeom = new THREE.BoxGeometry(80, 80, 80);
-        const roomMat = new THREE.MeshBasicMaterial({ color: s.color, wireframe: true, transparent: true, opacity: 0.1 });
-        const room = new THREE.Mesh(roomGeom, roomMat);
-        group.add(room);
+        // Door Frame
+        const doorGeom = new THREE.BoxGeometry(1, 20, 15);
+        const doorMat = new THREE.MeshStandardMaterial({ color: s.color, emissive: s.color, emissiveIntensity: 0.2 });
+        const door = new THREE.Mesh(doorGeom, doorMat);
+        group.add(door);
 
-        // Interactive Core
-        const core = new THREE.Mesh(
-            new THREE.IcosahedronGeometry(8, 1),
-            new THREE.MeshBasicMaterial({ color: s.color, wireframe: true })
+        // Signage
+        const signGeom = new THREE.PlaneGeometry(10, 2);
+        const signMat = new THREE.MeshBasicMaterial({ color: s.color, side: THREE.DoubleSide });
+        const sign = new THREE.Mesh(signGeom, signMat);
+        sign.position.set(s.side === 'left' ? 1 : -1, 12, 0);
+        sign.rotation.y = s.side === 'left' ? Math.PI/2 : -Math.PI/2;
+        group.add(sign);
+
+        // Interaction Hub
+        const hub = new THREE.Mesh(
+            new THREE.BoxGeometry(5, 25, 20),
+            new THREE.MeshBasicMaterial({ visible: false })
         );
-        core.userData = { type: s.id, camPos: new THREE.Vector3(s.pos[0], s.pos[1], s.pos[2] + 100) };
-        group.add(core);
-        interactiveNodes.push(core);
+        hub.userData = { 
+            type: s.id, 
+            walkPos: new THREE.Vector3(s.side === 'left' ? -10 : 10, 5, s.z),
+            targetPos: new THREE.Vector3(s.side === 'left' ? -corridorWidth/2 : corridorWidth/2, 5, s.z)
+        };
+        group.add(hub);
+        interactiveNodes.push(hub);
 
-        // Data Cable back to central core
-        const points = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(s.pos[0], s.pos[1], s.pos[2])];
-        const cableGeom = new THREE.BufferGeometry().setFromPoints(points);
-        scene.add(new THREE.Line(cableGeom, new THREE.LineBasicMaterial({ color: s.color, transparent: true, opacity: 0.2 })));
-
-        group.position.set(s.pos[0], s.pos[1], s.pos[2]);
+        group.position.set(x, 10, s.z);
         scene.add(group);
     });
 }
@@ -127,33 +203,68 @@ function onClick() {
     const intersects = raycaster.intersectObjects(interactiveNodes);
     if (intersects.length > 0) {
         const node = intersects[0].object;
-        focusSector(node.userData.type, node.userData.camPos, node.getWorldPosition(new THREE.Vector3()));
+        focusSector(node.userData.type, node.userData.walkPos, node.userData.targetPos);
     }
 }
 
-function focusSector(type, camPos, targetPos) {
-    gsap.to(camera.position, { x: camPos.x, y: camPos.y, z: camPos.z, duration: 2, ease: "expo.inOut" });
+function focusSector(type, walkPos, targetPos) {
+    // Walk down the hallway
+    const tl = gsap.timeline();
     
+    tl.to(camera.position, {
+        z: walkPos.z,
+        duration: Math.abs(camera.position.z - walkPos.z) / 100 + 0.5,
+        ease: "power1.inOut"
+    });
+
+    tl.to(camera.position, {
+        x: walkPos.x,
+        duration: 0.8,
+        ease: "power2.out"
+    }, "-=0.3");
+
+    // Turn and look at the door
     const dummy = new THREE.Object3D();
-    dummy.position.copy(camPos);
+    dummy.position.copy(walkPos);
     dummy.lookAt(targetPos);
     
-    gsap.to(camera.quaternion, {
-        x: dummy.quaternion.x, y: dummy.quaternion.y, z: dummy.quaternion.z, w: dummy.quaternion.w,
-        duration: 2, ease: "expo.inOut",
+    tl.to(camera.quaternion, {
+        x: dummy.quaternion.x,
+        y: dummy.quaternion.y,
+        z: dummy.quaternion.z,
+        w: dummy.quaternion.w,
+        duration: 0.8,
         onComplete: () => { document.getElementById(`${type}-overlay`).classList.remove('hidden'); }
-    });
+    }, "-=0.5");
 }
 
 function closeOverlay(id) {
     document.getElementById(id).classList.add('hidden');
-    gsap.to(camera.position, { x: 0, y: 300, z: 400, duration: 2, ease: "power2.inOut" });
-    gsap.to(camera.rotation, { x: -0.6, y: 0, z: 0, duration: 2 });
+    // Rotate back to hallway view
+    const currentZ = camera.position.z;
+    const hallwayLookAt = new THREE.Vector3(0, 5, -500);
+    const dummy = new THREE.Object3D();
+    dummy.position.copy(camera.position);
+    dummy.lookAt(hallwayLookAt);
+
+    gsap.to(camera.quaternion, {
+        x: dummy.quaternion.x,
+        y: dummy.quaternion.y,
+        z: dummy.quaternion.z,
+        w: dummy.quaternion.w,
+        duration: 1,
+        ease: "power2.inOut"
+    });
+
+    gsap.to(camera.position, {
+        x: 0,
+        duration: 0.8
+    });
 }
 
 function animate() {
     requestAnimationFrame(animate);
-    if (dnaGroup) dnaGroup.rotation.y += 0.005;
+    if (dnaGroup) dnaGroup.rotation.y += 0.01;
     composer.render();
 }
 
@@ -161,7 +272,7 @@ function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
-    composer.setSize(window.innerWidth, window.innerHeight);
+    if (composer) composer.setSize(window.innerWidth, window.innerHeight);
 }
 
 function onMouseMove(event) {
@@ -175,12 +286,13 @@ document.getElementById('enter-btn').addEventListener('click', () => {
         document.getElementById('intro-screen').style.display = 'none';
         document.querySelectorAll('.ui-element').forEach(el => el.classList.remove('hidden'));
     }});
-    gsap.to(camera.position, { x: 0, y: 300, z: 400, duration: 3, ease: "expo.inOut" });
+    // Dramatic walkthrough start
+    gsap.to(camera.position, { z: 220, duration: 2, ease: "power2.out" });
 });
 
 window.focusSector = (type) => {
     const node = interactiveNodes.find(n => n.userData.type === type);
-    if (node) focusSector(type, node.userData.camPos, node.getWorldPosition(new THREE.Vector3()));
+    if (node) focusSector(type, node.userData.walkPos, node.userData.targetPos);
 };
 
 window.closeOverlay = closeOverlay;
