@@ -213,5 +213,6 @@ window.focusSector = (type) => {
     if (node) triggerSectorNavigation(type, node.userData.walkPos, node.userData.targetPos);
 };
 
+
 window.closeOverlay = closeOverlay;
 init();
