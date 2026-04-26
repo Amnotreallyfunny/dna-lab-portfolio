@@ -220,13 +220,17 @@ function onClick(event) {
 }
 
 function focusSector(type, walkPos, targetPos) {
+    console.log('Focusing sector:', type);
     // Walk down the hallway
     const tl = gsap.timeline();
     
+    // Close any open overlays first
+    document.querySelectorAll('.hologram-panel').forEach(p => p.classList.add('hidden'));
+
     tl.to(camera.position, {
         z: walkPos.z,
         duration: Math.abs(camera.position.z - walkPos.z) / 100 + 0.5,
-        ease: "power1.inOut"
+        ease: "power2.inOut"
     });
 
     tl.to(camera.position, {
@@ -238,7 +242,7 @@ function focusSector(type, walkPos, targetPos) {
     // Turn and look at the door
     const dummy = new THREE.Object3D();
     dummy.position.copy(walkPos);
-    dummy.lookAt(targetPos);
+    dummy.lookAt(targetPos.x, targetPos.y, targetPos.z);
     
     tl.to(camera.quaternion, {
         x: dummy.quaternion.x,
@@ -246,7 +250,19 @@ function focusSector(type, walkPos, targetPos) {
         z: dummy.quaternion.z,
         w: dummy.quaternion.w,
         duration: 0.8,
-        onComplete: () => { document.getElementById(`${type}-overlay`).classList.remove('hidden'); }
+        onComplete: () => { 
+            console.log('Animation complete, showing overlay:', `${type}-overlay`);
+            const overlay = document.getElementById(`${type}-overlay`);
+            if (overlay) {
+                overlay.classList.remove('hidden');
+                gsap.fromTo(overlay, 
+                    { opacity: 0, scale: 0.9, xPercent: -50, yPercent: -50, left: "50%", top: "50%" }, 
+                    { opacity: 1, scale: 1, duration: 0.4 }
+                );
+            } else {
+                console.error('Overlay not found:', `${type}-overlay`);
+            }
+        }
     }, "-=0.5");
 }
 
