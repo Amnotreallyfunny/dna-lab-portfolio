@@ -3,131 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sanjanaa Suresh | Digital Twin Corridor</title>
+    <title>Sanjanaa Suresh | DNA Lab Portfolio</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
 </head>
 <body>
-    <!-- Room 1: Amazon Music Lab -->
-    <div id="amazon-overlay" class="hologram-panel hidden">
-        <button class="close-btn" onclick="closeOverlay('amazon-overlay')">X_CLOSE</button>
-        <h2 class="section-title">SECTOR_01 // AMAZON_LAB</h2>
-        <div class="content-body">
-            <h3>APPLICATION ENGINEER 3</h3>
-            <p class="date">FEB 2025 – PRESENT // BENGALURU</p>
-            <ul class="task-list">
-                <li>OWNED PRODUCTION RELIABILITY FOR DISTRIBUTED BACKEND SYSTEMS, RESOLVING SEV1/SEV2 INCIDENTS THROUGH ROOT CAUSE ANALYSIS.</li>
-                <li>DESIGNED AND IMPLEMENTED AUTOMATED VALIDATION FRAMEWORKS FOR CONFIGURATION AND DEPLOYMENT PIPELINES, REDUCING REGRESSION EFFORT BY ~3+ HOURS PER CYCLE.</li>
-                <li>BUILT GENAI-POWERED VALIDATION AND ANALYSIS TOOLING LEVERAGING LLM-BASED SYSTEMS AND AWS INFRASTRUCTURE.</li>
-                <li>ENHANCED OBSERVABILITY SYSTEMS (METRICS, LOGGING, TRAFFIC ANALYSIS) FOR HIGH-SCALE ENVIRONMENTS.</li>
-                <li>RESOLVED CRITICAL CONFIGURATION DRIFT ISSUES ACROSS SERVICES IN MULTI-SERVICE ARCHITECTURES.</li>
-                <li>WORKED ON LARGE-SCALE ETL PIPELINES AND DATA WORKFLOWS, OPTIMIZING QUERY PERFORMANCE.</li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- Room 2: IoT & Systems Wing -->
-    <div id="aiotel-overlay" class="hologram-panel hidden">
-        <button class="close-btn" onclick="closeOverlay('aiotel-overlay')">X_CLOSE</button>
-        <h2 class="section-title">SECTOR_02 // IOT_WING</h2>
-        <div class="content-body">
-            <h3>SOFTWARE ENGINEER (BACKEND & SYSTEMS)</h3>
-            <p class="date">MAY 2023 – JAN 2025</p>
-            <div class="sub-sector">
-                <h4>IOT_PLATFORM_&_BACKEND</h4>
-                <p>DESIGNED AND BUILT AN END-TO-END IOT AND ANALYTICS PLATFORM FROM SCRATCH USING SPRING BOOT MICROSERVICES. ARCHITECTED DATA PIPELINES INTEGRATING KAFKA, SPARK, S3, AND CLICKHOUSE.</p>
-            </div>
-            <div class="sub-sector">
-                <h4>DATA_ENGINEERING</h4>
-                <p>OPTIMIZED BATCH AND STREAMING WORKFLOWS. ENGINEERED A CUSTOM DSL PARSER TO CONVERT EXCEL-LIKE FORMULAS INTO SQL QUERIES.</p>
-            </div>
-            <div class="sub-sector">
-                <h4>SYSTEM_DESIGN_&_SECURITY</h4>
-                <p>IMPLEMENTED MULTI-TENANT ARCHITECTURE WITH RBAC USING SPRING SECURITY. DESIGNED INTERNAL QUEUEING MECHANISMS FOR TASK ORCHESTRATION.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Room 3: Autonomous Robotics Bay -->
-    <div id="robotics-overlay" class="hologram-panel hidden">
-        <button class="close-btn" onclick="closeOverlay('robotics-overlay')">X_CLOSE</button>
-        <h2 class="section-title">SECTOR_03 // ROBOTICS_BAY</h2>
-        <div class="content-body">
-            <h3>JUNIOR CONTROL SYSTEMS ENGINEER</h3>
-            <p class="date">AUG 2022 – MAR 2023 // BULLWORK MOBILITY</p>
-            <ul class="task-list">
-                <li>IMPLEMENTED CONTROL SYSTEMS FOR AUTONOMOUS AGRICULTURAL VEHICLES USING EMBEDDED C AND LADDER LOGIC.</li>
-                <li>DEVELOPED AND TUNED PID CONTROL LOOPS FOR VEHICLE SUBSYSTEM STABILITY.</li>
-                <li>INTEGRATED COMMUNICATION PROTOCOLS (CAN, I2C) FOR DISTRIBUTED HARDWARE INTERACTION.</li>
-                <li>WORKED ON AI-BASED VIDEO ANALYTICS FOR REAL-TIME STREAMING DATA.</li>
-                <li>LED AN INTERN DEVELOPMENT PROGRAM, MENTORING A TEAM TO DELIVER ENGINEERING TASKS.</li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- Room 4: Genetic Toolkit (Skills) -->
-    <div id="skills-overlay" class="hologram-panel hidden">
-        <button class="close-btn" onclick="closeOverlay('skills-overlay')">X_CLOSE</button>
-        <h2 class="section-title">CORE_DATA // SYSTEM_SPECS</h2>
-        <div class="toolkit-container">
-            <div class="skill-category">
-                <h3>BACKEND_ENG</h3>
-                <div class="skill-tags"><span>DISTRIBUTED SYSTEMS</span><span>MICROSERVICES</span><span>SYSTEM DESIGN</span><span>RESTFUL APIs</span><span>RBAC</span></div>
-            </div>
-            <div class="skill-category">
-                <h3>LANGUAGES</h3>
-                <div class="skill-tags"><span>JAVA (SPRING BOOT)</span><span>PYTHON</span><span>C++</span><span>EMBEDDED C</span></div>
-            </div>
-            <div class="skill-category">
-                <h3>DISTRIBUTED_SYSTEMS</h3>
-                <div class="skill-tags"><span>APACHE KAFKA</span><span>RABBITMQ</span><span>AWS SNS/SQS</span><span>EVENT-DRIVEN ARCHITECTURES</span></div>
-            </div>
-            <div class="skill-category">
-                <h3>DATA_ENG</h3>
-                <div class="skill-tags"><span>POSTGRESQL</span><span>MYSQL</span><span>CLICKHOUSE</span><span>ETL PIPELINES</span><span>DATA MODELING</span></div>
-            </div>
-            <div class="skill-category">
-                <h3>CLOUD_&_AI</h3>
-                <div class="skill-tags"><span>AWS</span><span>DOCKER</span><span>KUBERNETES</span><span>GenAI</span><span>TENSORFLOW</span></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="intro-screen">
-        <div class="intro-content">
-            <h1 class="glitch" data-text="LAB_CORRIDOR">LAB_CORRIDOR</h1>
-            <p>ESTABLISHING_NEURAL_LINK_TO_VAULT_v3.0...</p>
-            <button id="enter-btn">INITIATE_WALKTHROUGH</button>
-        </div>
-    </div>
-
-    <div id="canvas-container"></div>
-
-    <header class="ui-element hidden">
+    <div class="dna-background" id="dna-bg"></div>
+    
+    <header>
         <div class="logo">
+            <span class="scanner-line"></span>
             <h1>SANJANAA_SURESH</h1>
-            <p>DNA_SIMULATION_COORD: 12.9716° N, 77.5946° E</p>
+            <p class="tagline">SOFTWARE ENGINEER | BIOTECH ENTHUSIAST | ECE SYSTEMS</p>
         </div>
         <nav>
             <ul>
-                <li onclick="focusSector('amazon')">AMAZON_LAB</li>
-                <li onclick="focusSector('aiotel')">IOT_WING</li>
-                <li onclick="focusSector('robotics')">ROBOTICS_BAY</li>
-                <li onclick="focusSector('skills')">SPECS</li>
+                <li><a href="#about">TERMINAL</a></li>
+                <li><a href="#experience">LAB_STATIONS</a></li>
+                <li><a href="#skills">GENETIC_TOOLKIT</a></li>
+                <li><a href="#projects">SYNTHESIZED_PROJECTS</a></li>
+                <li><a href="#contact">SEQUENCE_LINK</a></li>
             </ul>
         </nav>
     </header>
 
-    <footer class="ui-element hidden">
-        <p>SYSTEM_VERSION_3.11 // <a href="https://www.linkedin.com/in/sanjanaa-s-3ba20a178/" target="_blank">LINKEDIN_PROFILE</a></p>
+    <main>
+        <section id="about" class="lab-section">
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <span class="dot red"></span>
+                    <span class="dot yellow"></span>
+                    <span class="dot green"></span>
+                    <span class="terminal-title">user@sanjanaa: ~ / intro</span>
+                </div>
+                <div class="terminal-body">
+                    <p class="typing">> Initializing DNA Lab environment...</p>
+                    <p class="typing">> Loading career_objective.dna...</p>
+                    <p class="bio-text">
+                        Software Engineer specializing in backend systems and AI-driven automation. 
+                        Expertise in designing scalable microservices, real-time data pipelines, and GenAI-powered validation systems. 
+                        Currently exploring the intersection of backend engineering and applied AI to build intelligent, large-scale systems.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience" class="lab-section">
+            <h2 class="section-title">LAB_STATIONS (EXPERIENCE)</h2>
+            <div class="station-grid">
+                <div class="station-card">
+                    <div class="station-id">STATION_01</div>
+                    <h3>Amazon Music</h3>
+                    <p class="role">Application Engineer 3 [L4]</p>
+                    <p class="date">Feb 2025 – Present</p>
+                    <ul class="task-list">
+                        <li>Owned production reliability for distributed backend systems, resolving Sev1/Sev2 incidents.</li>
+                        <li>Designed automated validation frameworks, reducing manual regression effort by ~3+ hours per cycle.</li>
+                        <li>Built GenAI-powered validation and analysis tooling using AWS infrastructure.</li>
+                        <li>Enhanced observability systems and resolved critical configuration drift issues.</li>
+                    </ul>
+                </div>
+                <div class="station-card">
+                    <div class="station-id">STATION_02</div>
+                    <h3>AIOTEL Pvt Ltd</h3>
+                    <p class="role">Software Engineer (Backend & Systems)</p>
+                    <p class="date">May 2023 – Jan 2025</p>
+                    <ul class="task-list">
+                        <li>Designed and built an end-to-end IoT and analytics platform from scratch.</li>
+                        <li>Architected distributed data pipelines integrating Kafka, Spark, S3, and ClickHouse.</li>
+                        <li>Developed high-performance RESTful APIs and implemented multi-tenant RBAC security.</li>
+                        <li>Optimized batch workflows and engineered custom DSL parsers for SQL.</li>
+                    </ul>
+                </div>
+                <div class="station-card">
+                    <div class="station-id">STATION_03</div>
+                    <h3>Bullwork Mobility</h3>
+                    <p class="role">Junior Control Systems Engineer</p>
+                    <p class="date">Aug 2022 – Mar 2023</p>
+                    <ul class="task-list">
+                        <li>Implemented control systems for autonomous agricultural vehicles using Embedded C.</li>
+                        <li>Developed and tuned PID control loops and integrated CAN/I2C protocols.</li>
+                        <li>Worked on AI-based video analytics for real-time streaming data.</li>
+                        <li>Led an intern development program and coordinated engineering tasks.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills" class="lab-section">
+            <h2 class="section-title">GENETIC_TOOLKIT (SKILLS)</h2>
+            <div class="toolkit-container">
+                <div class="skill-category">
+                    <h3>BACKEND_BASE_PAIRS</h3>
+                    <div class="skill-tags">
+                        <span>Java (Spring Boot)</span> <span>Python</span> <span>C++</span> <span>Embedded C</span> <span>Microservices</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>SYSTEM_ARCHITECTURE</h3>
+                    <div class="skill-tags">
+                        <span>Distributed Systems</span> <span>Kafka</span> <span>RabbitMQ</span> <span>AWS SNS/SQS</span> <span>Event-driven</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>DATA_SEQUENCING</h3>
+                    <div class="skill-tags">
+                        <span>PostgreSQL</span> <span>MySQL</span> <span>ClickHouse</span> <span>ETL Pipelines</span> <span>Apache Spark</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>BIO_INFORMATICS_&_AI</h3>
+                    <div class="skill-tags">
+                        <span>GenAI</span> <span>LLMs</span> <span>TensorFlow</span> <span>CRISPR/Gene Editing (Cert)</span> <span>NetLogo</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>DEVOPS_&_PLATFORMS</h3>
+                    <div class="skill-tags">
+                        <span>AWS</span> <span>Docker</span> <span>Kubernetes</span> <span>CI/CD Pipelines</span> <span>Azure DevOps</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="lab-section">
+            <h2 class="section-title">SYNTHESIZED_PROJECTS</h2>
+            <div class="project-carousel">
+                <div class="project-item">
+                    <h3>Fault Diagnosis of Wind Turbine (AI)</h3>
+                    <p>Using AI to diagnose faults in floating wind turbine generators.</p>
+                </div>
+                <div class="project-item">
+                    <h3>Smart Mirror</h3>
+                    <p>Built with Raspberry Pi, Java, and Python for IoT integration.</p>
+                </div>
+                <div class="project-item">
+                    <h3>Mycelium Growth Simulation</h3>
+                    <p>Agent-based simulation using NetLogo Web to model fungal networks.</p>
+                </div>
+                <div class="project-item">
+                    <h3>Propulsion System for CubeSat</h3>
+                    <p>Theory presented at DRDO/ISRO National Conference (ICSS2019).</p>
+                </div>
+                <div class="project-item">
+                    <h3>Spark Integration (Java 17)</h3>
+                    <p>Implementation of Spark integration using modern Java sealed classes.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="lab-section">
+            <div class="contact-box">
+                <h2>INITIATE_SEQUENCE_LINK</h2>
+                <div class="contact-links">
+                    <a href="mailto:sanjanaasuresh2000@gmail.com" class="contact-btn">EMAIL_USER</a>
+                    <a href="https://www.linkedin.com/in/sanjanaa-s-3ba20a178/" target="_blank" class="contact-btn">LINKEDIN_PROFILE</a>
+                    <a href="https://github.com/Amnotreallyfunny" target="_blank" class="contact-btn">GITHUB_REPOSITORY</a>
+                </div>
+                <div class="achievements-mini">
+                    <p>AMCAT English Comprehension: 85% // Logical Ability: 82%</p>
+                    <p>Education: B.E. Electronics & Communication Engineering (8.5 CGPA)</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 SANJANAA SURESH // SYSTEM_OPERATIONAL // v4.0_STABLE</p>
     </footer>
 
     <script src="script.js"></script>
