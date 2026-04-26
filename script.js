@@ -185,7 +185,10 @@ function focusTwin(type, camPos, targetPos) {
 function showOverlay(id) {
     const el = document.getElementById(id);
     el.classList.remove('hidden');
-    gsap.fromTo(el, { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.4 });
+    gsap.fromTo(el, 
+        { opacity: 0, scale: 0.9, xPercent: -50, yPercent: -50 }, 
+        { opacity: 1, scale: 1, duration: 0.4, ease: "power2.out" }
+    );
 }
 
 function closeOverlay(id) {

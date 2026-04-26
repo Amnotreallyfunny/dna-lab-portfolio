@@ -89,97 +89,60 @@ body::after {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 90%;
+    width: 90vw;
     max-width: 1000px;
-    max-height: 85vh;
-    background: rgba(0, 10, 15, 0.9);
+    height: auto;
+    max-height: 80vh;
+    background: rgba(0, 10, 15, 0.95);
     border: 1px solid var(--accent-color);
-    padding: 3rem;
+    padding: 2.5rem 1.5rem 1.5rem 1.5rem;
     z-index: 500;
     overflow-y: auto;
     backdrop-filter: blur(20px);
     box-shadow: inset 0 0 20px var(--diagnostic-blue);
     clip-path: polygon(0 0, 97% 0, 100% 3%, 100% 100%, 3% 100%, 0 97%);
+    display: flex;
+    flex-direction: column;
+}
+
+.hologram-panel::-webkit-scrollbar {
+    width: 4px;
+}
+.hologram-panel::-webkit-scrollbar-thumb {
+    background: var(--accent-color);
 }
 
 .hologram-panel::before {
     content: "SYSTEM_DIAGNOSTIC_v2.0";
     position: absolute;
-    top: 10px;
+    top: 8px;
     left: 20px;
     font-size: 0.6rem;
     color: var(--accent-color);
     letter-spacing: 2px;
 }
 
-.hidden {
-    display: none !important;
-    opacity: 0;
-}
-
-.close-btn {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: transparent;
-    border: 1px solid var(--accent-color);
-    color: var(--accent-color);
-    padding: 0.3rem 0.6rem;
-    cursor: pointer;
-    font-family: 'Orbitron', sans-serif;
-}
-
-/* UI Elements */
-header {
-    position: fixed;
-    top: 0;
+/* Content Layout Fixes */
+.station-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+    gap: 1.5rem; 
     width: 100%;
-    padding: 1.5rem 3rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 100;
 }
 
-nav ul {
-    display: flex;
-    list-style: none;
-    gap: 2rem;
-}
-
-nav ul li {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.7rem;
-    color: var(--accent-color);
-    cursor: pointer;
-    letter-spacing: 3px;
-    border-bottom: 1px solid transparent;
-    transition: all 0.3s;
-}
-
-nav ul li:hover {
-    border-bottom: 1px solid var(--accent-color);
-    text-shadow: var(--accent-glow);
-}
-
-footer {
-    position: fixed;
-    bottom: 0;
+.project-carousel {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
     width: 100%;
-    padding: 1rem 3rem;
-    text-align: center;
-    z-index: 100;
-    font-size: 0.6rem;
-    letter-spacing: 2px;
-    opacity: 0.6;
 }
 
-/* Content Styles */
-.section-title { color: var(--accent-color); margin-bottom: 2rem; font-size: 1.2rem; border-left: 2px solid var(--accent-color); padding-left: 1rem; }
-.station-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-.station-card { background: rgba(0, 255, 204, 0.03); padding: 1.5rem; border: 1px solid rgba(0, 255, 204, 0.1); position: relative; }
-.station-card::after { content: "DATA_NODE"; position: absolute; bottom: 5px; right: 10px; font-size: 0.5rem; opacity: 0.5; }
-.skill-tags span { border: 1px solid var(--accent-color); padding: 0.2rem 0.6rem; margin: 0.2rem; display: inline-block; font-size: 0.7rem; }
+.toolkit-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+}
 
 /* Glitch Effect */
 .glitch {
