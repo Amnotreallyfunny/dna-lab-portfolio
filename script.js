@@ -35,7 +35,7 @@ function init() {
     scene.add(dnaGroup);
 
     raycaster = new THREE.Raycaster();
-    mouse = new THREE.Vector2();
+    mouse = new THREE.Vector2(0, 0); // Initialize with 0,0
 
     createHallway();
     createDNALab();
@@ -197,12 +197,24 @@ function createSectors() {
     });
 }
 
-function onClick() {
+function onClick(event) {
     if (!isUniverseActive) return;
+    
+    // Prevent click from triggering if clicking on UI elements
+    if (event.target.closest('.hologram-panel') || event.target.closest('header') || event.target.tagName === 'BUTTON') {
+        console.log('Click ignored: target is UI element');
+        return;
+    }
+
     raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObjects(interactiveNodes);
+    const intersects = raycaster.intersectObjects(interactiveNodes, true);
+    
+    console.log('Interactive Nodes count:', interactiveNodes.length);
+    console.log('Intersects found:', intersects.length);
+
     if (intersects.length > 0) {
         const node = intersects[0].object;
+        console.log('Hitting node:', node.userData.type);
         focusSector(node.userData.type, node.userData.walkPos, node.userData.targetPos);
     }
 }
