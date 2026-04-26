@@ -1,9 +1,9 @@
 :root {
-    --bg-color: #00050a;
+    --bg-color: #00080a;
     --accent-color: #00ffcc;
-    --accent-glow: 0 0 15px rgba(0, 255, 204, 0.6);
-    --hologram-bg: rgba(0, 20, 30, 0.85);
-    --text-color: #e0f0f0;
+    --accent-glow: 0 0 10px rgba(0, 255, 204, 0.5);
+    --diagnostic-blue: rgba(0, 150, 255, 0.4);
+    --text-color: #a0f0f0;
 }
 
 body, html {
@@ -15,6 +15,20 @@ body, html {
     background: var(--bg-color);
     color: var(--text-color);
     font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+}
+
+/* Digital Twin Diagnostic Overlay */
+body::after {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: 
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+    background-size: 100% 3px, 3px 100%;
+    pointer-events: none;
+    z-index: 1000;
 }
 
 #canvas-container {
@@ -33,7 +47,7 @@ body, html {
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, #001520 0%, #00050a 100%);
+    background: radial-gradient(circle, #001520 0%, #00080a 100%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -69,38 +83,33 @@ body, html {
     box-shadow: 0 0 30px var(--accent-color);
 }
 
-/* Hologram Panels */
+/* Hologram Panels - Diagnostic Style */
 .hologram-panel {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 85%;
-    max-width: 900px;
+    width: 90%;
+    max-width: 1000px;
     max-height: 85vh;
-    background: rgba(0, 15, 25, 0.7);
+    background: rgba(0, 10, 15, 0.9);
     border: 1px solid var(--accent-color);
-    padding: 3.5rem;
+    padding: 3rem;
     z-index: 500;
     overflow-y: auto;
-    box-shadow: 0 0 40px rgba(0, 255, 204, 0.15);
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(20px);
+    box-shadow: inset 0 0 20px var(--diagnostic-blue);
     clip-path: polygon(0 0, 97% 0, 100% 3%, 100% 100%, 3% 100%, 0 97%);
-    pointer-events: auto;
 }
 
 .hologram-panel::before {
-    content: " ";
-    display: block;
+    content: "SYSTEM_DIAGNOSTIC_v2.0";
     position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-    z-index: 2;
-    background-size: 100% 2px, 3px 100%;
-    pointer-events: none;
+    top: 10px;
+    left: 20px;
+    font-size: 0.6rem;
+    color: var(--accent-color);
+    letter-spacing: 2px;
 }
 
 .hidden {
@@ -113,10 +122,11 @@ body, html {
     top: 1rem;
     right: 1rem;
     background: transparent;
-    border: none;
+    border: 1px solid var(--accent-color);
     color: var(--accent-color);
-    font-size: 1.5rem;
+    padding: 0.3rem 0.6rem;
     cursor: pointer;
+    font-family: 'Orbitron', sans-serif;
 }
 
 /* UI Elements */
@@ -129,10 +139,7 @@ header {
     justify-content: space-between;
     align-items: center;
     z-index: 100;
-    pointer-events: none;
 }
-
-header * { pointer-events: auto; }
 
 nav ul {
     display: flex;
@@ -142,10 +149,17 @@ nav ul {
 
 nav ul li {
     font-family: 'Orbitron', sans-serif;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: var(--accent-color);
     cursor: pointer;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
+    border-bottom: 1px solid transparent;
+    transition: all 0.3s;
+}
+
+nav ul li:hover {
+    border-bottom: 1px solid var(--accent-color);
+    text-shadow: var(--accent-glow);
 }
 
 footer {
@@ -155,15 +169,17 @@ footer {
     padding: 1rem 3rem;
     text-align: center;
     z-index: 100;
-    font-size: 0.7rem;
-    opacity: 0.7;
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    opacity: 0.6;
 }
 
-/* Reusing content styles from previous turn */
-.section-title { color: var(--accent-color); margin-bottom: 2rem; border-left: 3px solid var(--accent-color); padding-left: 1rem; }
+/* Content Styles */
+.section-title { color: var(--accent-color); margin-bottom: 2rem; font-size: 1.2rem; border-left: 2px solid var(--accent-color); padding-left: 1rem; }
 .station-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-.station-card { background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border: 1px solid rgba(0, 255, 204, 0.2); }
-.skill-tags span { background: rgba(0, 255, 204, 0.1); border: 1px solid var(--accent-color); padding: 0.2rem 0.5rem; margin: 0.2rem; display: inline-block; font-size: 0.8rem; }
+.station-card { background: rgba(0, 255, 204, 0.03); padding: 1.5rem; border: 1px solid rgba(0, 255, 204, 0.1); position: relative; }
+.station-card::after { content: "DATA_NODE"; position: absolute; bottom: 5px; right: 10px; font-size: 0.5rem; opacity: 0.5; }
+.skill-tags span { border: 1px solid var(--accent-color); padding: 0.2rem 0.6rem; margin: 0.2rem; display: inline-block; font-size: 0.7rem; }
 
 /* Glitch Effect */
 .glitch {
@@ -182,6 +198,6 @@ footer {
 
 @media (max-width: 768px) {
     .station-grid { grid-template-columns: 1fr; }
-    .intro-content h1 { font-size: 2.5rem; }
-    header { padding: 1rem; }
+    .intro-content h1 { font-size: 2rem; }
+    header { padding: 1rem; flex-direction: column; }
 }
