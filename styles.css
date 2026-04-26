@@ -75,17 +75,32 @@ body, html {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 80%;
-    max-width: 800px;
-    max-height: 80vh;
-    background: var(--hologram-bg);
+    width: 85%;
+    max-width: 900px;
+    max-height: 85vh;
+    background: rgba(0, 15, 25, 0.7);
     border: 1px solid var(--accent-color);
-    padding: 3rem;
+    padding: 3.5rem;
     z-index: 500;
     overflow-y: auto;
-    box-shadow: 0 0 50px rgba(0, 255, 204, 0.2);
-    backdrop-filter: blur(10px);
-    clip-path: polygon(0 0, 95% 0, 100% 5%, 100% 100%, 5% 100%, 0 95%);
+    box-shadow: 0 0 40px rgba(0, 255, 204, 0.15);
+    backdrop-filter: blur(12px);
+    clip-path: polygon(0 0, 97% 0, 100% 3%, 100% 100%, 3% 100%, 0 97%);
+    pointer-events: auto;
+}
+
+.hologram-panel::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    z-index: 2;
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
 }
 
 .hidden {

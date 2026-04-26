@@ -4,10 +4,15 @@ let isUniverseActive = false;
 
 function init() {
     scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x00050a);
+    scene.fog = new THREE.Fog(0x00050a, 10, 300);
+
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    
+    renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.shadowMap.enabled = true;
     document.getElementById('canvas-container').appendChild(renderer.domElement);
 
     dnaGroup = new THREE.Group();
@@ -16,13 +21,14 @@ function init() {
     raycaster = new THREE.Raycaster();
     mouse = new THREE.Vector2();
 
-    createUniverse();
+    createLab();
     createDNA();
+    createStations();
     addLights();
 
-    camera.position.z = 100;
-    camera.position.y = 50;
-    camera.lookAt(0, 0, 0);
+    // Starting camera position (outside looking in or at entrance)
+    camera.position.set(0, 20, 100);
+    camera.lookAt(0, 10, 0);
 
     window.addEventListener('resize', onWindowResize);
     window.addEventListener('click', onClick);
@@ -31,82 +37,166 @@ function init() {
     animate();
 }
 
-function createUniverse() {
-    const starGeometry = new THREE.BufferGeometry();
-    const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 });
-    const starVertices = [];
-    for (let i = 0; i < 5000; i++) {
-        const x = (Math.random() - 0.5) * 2000;
-        const y = (Math.random() - 0.5) * 2000;
-        const z = (Math.random() - 0.5) * 2000;
-        starVertices.push(x, y, z);
-    }
-    starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
-    const stars = new THREE.Points(starGeometry, starMaterial);
-    scene.add(stars);
+function createLab() {
+    const floorSize = 200;
+    
+    // Floor with grid
+    const floorGeom = new THREE.PlaneGeometry(floorSize, floorSize);
+    const floorMat = new THREE.MeshStandardMaterial({ 
+        color: 0x101a20, 
+        metalness: 0.8, 
+        roughness: 0.2 
+    });
+    const floor = new THREE.Mesh(floorGeom, floorMat);
+    floor.rotation.x = -Math.PI / 2;
+    floor.receiveShadow = true;
+    scene.add(floor);
+
+    const grid = new THREE.GridHelper(floorSize, 20, 0x00ffcc, 0x051015);
+    grid.position.y = 0.05;
+    scene.add(grid);
+
+    // Walls
+    const wallHeight = 60;
+    const wallMat = new THREE.MeshStandardMaterial({ color: 0x050a10, metalness: 0.5, roughness: 0.5 });
+    
+    // Back wall
+    const backWall = new THREE.Mesh(new THREE.PlaneGeometry(floorSize, wallHeight), wallMat);
+    backWall.position.z = -floorSize/2;
+    backWall.position.y = wallHeight/2;
+    scene.add(backWall);
+
+    // Side walls
+    const sideWallGeom = new THREE.PlaneGeometry(floorSize, wallHeight);
+    const leftWall = new THREE.Mesh(sideWallGeom, wallMat);
+    leftWall.position.x = -floorSize/2;
+    leftWall.rotation.y = Math.PI / 2;
+    leftWall.position.y = wallHeight/2;
+    scene.add(leftWall);
+
+    const rightWall = new THREE.Mesh(sideWallGeom, wallMat);
+    rightWall.position.x = floorSize/2;
+    rightWall.rotation.y = -Math.PI / 2;
+    rightWall.position.y = wallHeight/2;
+    scene.add(rightWall);
+
+    // Neon trim on walls
+    const neonGeom = new THREE.BoxGeometry(floorSize, 0.5, 0.5);
+    const neonMat = new THREE.MeshBasicMaterial({ color: 0x00ffcc });
+    
+    const trim = new THREE.Mesh(neonGeom, neonMat);
+    trim.position.set(0, wallHeight - 2, -floorSize/2 + 0.5);
+    scene.add(trim);
 }
 
 function createDNA() {
-    const segments = 100;
-    const radius = 10;
-    const height = 150;
+    const segments = 60;
+    const radius = 5;
+    const height = 40;
     const twist = Math.PI * 4;
 
-    const sphereGeom = new THREE.SphereGeometry(0.5, 16, 16);
-    const lineMat = new THREE.LineBasicMaterial({ color: 0x00ffcc, opacity: 0.3, transparent: true });
+    const sphereGeom = new THREE.SphereGeometry(0.3, 16, 16);
+    const lineMat = new THREE.LineBasicMaterial({ color: 0x00ffcc, opacity: 0.4, transparent: true });
+
+    // Pedestal for DNA
+    const pedestal = new THREE.Mesh(
+        new THREE.CylinderGeometry(8, 10, 2, 32),
+        new THREE.MeshStandardMaterial({ color: 0x202020, metalness: 0.9 })
+    );
+    pedestal.position.y = 1;
+    scene.add(pedestal);
 
     for (let i = 0; i < segments; i++) {
         const ratio = i / segments;
         const angle = ratio * twist;
-        const y = (ratio - 0.5) * height;
+        const y = ratio * height + 2;
 
         const x1 = Math.cos(angle) * radius;
         const z1 = Math.sin(angle) * radius;
         const x2 = Math.cos(angle + Math.PI) * radius;
         const z2 = Math.sin(angle + Math.PI) * radius;
 
-        // Atoms
-        const atom1 = new THREE.Mesh(sphereGeom, new THREE.MeshPhongMaterial({ color: 0x00ffcc, emissive: 0x00ffcc }));
+        const atom1 = new THREE.Mesh(sphereGeom, new THREE.MeshPhongMaterial({ color: 0x00ffcc, emissive: 0x00ffcc, emissiveIntensity: 0.5 }));
         atom1.position.set(x1, y, z1);
         dnaGroup.add(atom1);
 
-        const atom2 = new THREE.Mesh(sphereGeom, new THREE.MeshPhongMaterial({ color: 0x00ffcc, emissive: 0x00ffcc }));
+        const atom2 = new THREE.Mesh(sphereGeom, new THREE.MeshPhongMaterial({ color: 0x00ffcc, emissive: 0x00ffcc, emissiveIntensity: 0.5 }));
         atom2.position.set(x2, y, z2);
         dnaGroup.add(atom2);
 
-        // Connection
         const points = [new THREE.Vector3(x1, y, z1), new THREE.Vector3(x2, y, z2)];
         const lineGeom = new THREE.BufferGeometry().setFromPoints(points);
         const line = new THREE.Line(lineGeom, lineMat);
         dnaGroup.add(line);
-
-        // Add interactive hubs at specific points
-        if (i === 20) createHub(x1, y, z1, 'experience', 'STATION_01');
-        if (i === 50) createHub(x1, y, z1, 'skills', 'TOOLKIT_ROOT');
-        if (i === 80) createHub(x1, y, z1, 'projects', 'SYNTHESIS_CORE');
     }
+    dnaGroup.position.y = 5;
 }
 
-function createHub(x, y, z, type, label) {
-    const hubGeom = new THREE.IcosahedronGeometry(3, 1);
-    const hubMat = new THREE.MeshPhongMaterial({ 
-        color: 0x00ffcc, 
-        emissive: 0x00ffcc, 
-        wireframe: true 
-    });
+function createStations() {
+    // Station 1: Experience (Left)
+    createStationMesh(-40, 0, -30, 'experience', 'STATION_EXP');
+    // Station 2: Skills (Right)
+    createStationMesh(40, 0, -30, 'skills', 'STATION_SKL');
+    // Station 3: Projects (Center-Back)
+    createStationMesh(0, 0, -60, 'projects', 'STATION_PRJ');
+}
+
+function createStationMesh(x, y, z, type, label) {
+    const group = new THREE.Group();
+    
+    // Console Base
+    const base = new THREE.Mesh(
+        new THREE.BoxGeometry(10, 15, 5),
+        new THREE.MeshStandardMaterial({ color: 0x151515, metalness: 0.8 })
+    );
+    base.position.y = 7.5;
+    group.add(base);
+
+    // Screen
+    const screen = new THREE.Mesh(
+        new THREE.PlaneGeometry(8, 6),
+        new THREE.MeshPhongMaterial({ 
+            color: 0x001010, 
+            emissive: 0x00ffcc, 
+            emissiveIntensity: 0.2,
+            side: THREE.DoubleSide
+        })
+    );
+    screen.position.set(0, 11, 2.6);
+    screen.rotation.x = -0.2;
+    group.add(screen);
+
+    // Interactive Hub (Invisible click area or glowing element)
+    const hubGeom = new THREE.BoxGeometry(12, 16, 6);
+    const hubMat = new THREE.MeshBasicMaterial({ visible: false });
     const hub = new THREE.Mesh(hubGeom, hubMat);
-    hub.position.set(x, y, z);
-    hub.userData = { type, label };
-    dnaGroup.add(hub);
+    hub.position.y = 8;
+    hub.userData = { type, label, camPos: new THREE.Vector3(x, 15, z + 20) };
+    group.add(hub);
     interactiveNodes.push(hub);
+
+    group.position.set(x, y, z);
+    scene.add(group);
+
+    // Add a point light at each station
+    const light = new THREE.PointLight(0x00ffcc, 0.5, 30);
+    light.position.set(x, 15, z + 5);
+    scene.add(light);
 }
 
 function addLights() {
-    const ambientLight = new THREE.AmbientLight(0x404040);
+    const ambientLight = new THREE.AmbientLight(0x101010);
     scene.add(ambientLight);
-    const pointLight = new THREE.PointLight(0x00ffcc, 2, 100);
-    pointLight.position.set(0, 0, 50);
-    scene.add(pointLight);
+
+    // Spotlight on DNA
+    const spotLight = new THREE.SpotLight(0x00ffcc, 2);
+    spotLight.position.set(0, 50, 0);
+    spotLight.angle = Math.PI / 6;
+    spotLight.penumbra = 0.5;
+    spotLight.decay = 2;
+    spotLight.distance = 100;
+    spotLight.castShadow = true;
+    scene.add(spotLight);
 }
 
 function onWindowResize() {
@@ -128,19 +218,33 @@ function onClick() {
 
     if (intersects.length > 0) {
         const node = intersects[0].object;
-        focusNode(node.userData.type, node.position);
+        focusStation(node.userData.type, node.userData.camPos, node.getWorldPosition(new THREE.Vector3()));
     }
 }
 
-function focusNode(type, position) {
-    const targetPos = position ? position.clone().add(new THREE.Vector3(0, 0, 15)) : new THREE.Vector3(0, 0, 20);
-    
+function focusStation(type, camPos, targetPos) {
     gsap.to(camera.position, {
-        x: targetPos.x,
-        y: targetPos.y,
-        z: targetPos.z,
-        duration: 2,
-        ease: "power2.inOut",
+        x: camPos.x,
+        y: camPos.y,
+        z: camPos.z,
+        duration: 1.5,
+        ease: "power2.inOut"
+    });
+
+    const lookTarget = targetPos.clone().add(new THREE.Vector3(0, 5, 0));
+    
+    // We can't easily gsap lookAt, so we use a dummy object
+    const dummy = new THREE.Object3D();
+    dummy.position.copy(camera.position);
+    dummy.lookAt(lookTarget);
+    const targetQuaternion = dummy.quaternion.clone();
+
+    gsap.to(camera.quaternion, {
+        x: targetQuaternion.x,
+        y: targetQuaternion.y,
+        z: targetQuaternion.z,
+        w: targetQuaternion.w,
+        duration: 1.5,
         onComplete: () => {
             showOverlay(`${type}-overlay`);
         }
@@ -148,19 +252,21 @@ function focusNode(type, position) {
 }
 
 function showOverlay(id) {
-    document.getElementById(id).classList.remove('hidden');
-    gsap.fromTo(`#${id}`, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.5 });
+    const overlay = document.getElementById(id);
+    overlay.classList.remove('hidden');
+    gsap.fromTo(`#${id}`, { opacity: 0, x: "-50%", y: "-40%" }, { opacity: 1, x: "-50%", y: "-50%", duration: 0.5 });
 }
 
 function closeOverlay(id) {
     gsap.to(`#${id}`, { 
         opacity: 0, 
-        scale: 0.8, 
-        duration: 0.5, 
+        y: "-40%", 
+        duration: 0.4, 
         onComplete: () => {
             document.getElementById(id).classList.add('hidden');
-            // Reset camera position
-            gsap.to(camera.position, { z: 100, y: 50, x: 0, duration: 2, ease: "power2.inOut" });
+            // Return to central lab view
+            gsap.to(camera.position, { x: 0, y: 25, z: 70, duration: 1.5, ease: "power2.inOut" });
+            gsap.to(camera.rotation, { x: -0.2, y: 0, z: 0, duration: 1.5 });
         }
     });
 }
@@ -168,10 +274,7 @@ function closeOverlay(id) {
 function animate() {
     requestAnimationFrame(animate);
     if (dnaGroup) {
-        dnaGroup.rotation.y += 0.005;
-        if (!isUniverseActive) {
-            dnaGroup.rotation.z += 0.001;
-        }
+        dnaGroup.rotation.y += 0.01;
     }
     renderer.render(scene, camera);
 }
@@ -179,21 +282,21 @@ function animate() {
 // UI Controllers
 document.getElementById('enter-btn').addEventListener('click', () => {
     isUniverseActive = true;
-    gsap.to('#intro-screen', { opacity: 0, duration: 1.5, onComplete: () => {
+    gsap.to('#intro-screen', { opacity: 0, duration: 1, onComplete: () => {
         document.getElementById('intro-screen').style.display = 'none';
         document.querySelectorAll('.ui-element').forEach(el => el.classList.remove('hidden'));
     }});
     
-    // Initial fly-in
-    gsap.to(camera.position, { z: 80, y: 0, duration: 3, ease: "power3.out" });
+    // Dramatic fly-in into the lab
+    gsap.to(camera.position, { x: 0, y: 25, z: 70, duration: 2.5, ease: "power3.out" });
+    gsap.to(camera.rotation, { x: -0.2, duration: 2.5 });
 });
 
 window.focusNode = (type) => {
     const node = interactiveNodes.find(n => n.userData.type === type);
     if (node) {
-        const worldPos = new THREE.Vector3();
-        node.getWorldPosition(worldPos);
-        focusNode(type, worldPos);
+        const worldPos = node.getWorldPosition(new THREE.Vector3());
+        focusStation(type, node.userData.camPos, worldPos);
     }
 };
 
